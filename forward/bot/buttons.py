@@ -9,6 +9,8 @@ def btns(type=None, lang=1):
         btn = [
             [KeyboardButton(TEXTS['Lokatsiya📍'][lang]), KeyboardButton(TEXTS['forward_academy.uz'][lang])],
             [KeyboardButton(TEXTS["Instagram"][lang]), KeyboardButton(TEXTS['Telegram'][lang])],
+            [KeyboardButton(TEXTS["Telegram Support"][lang]), KeyboardButton(TEXTS['Call center'][lang])],
+            [KeyboardButton(TEXTS['Settings'][lang])]
         ]
 
     elif type == 'contact':
@@ -17,7 +19,7 @@ def btns(type=None, lang=1):
         ]
     elif type == "lang":
         btn = [
-            [KeyboardButton("🇺🇿Uz"), KeyboardButton("🇷🇺Ru")]
+            [KeyboardButton("🇺🇿Uz"), KeyboardButton("🇷🇺Ru"), KeyboardButton("🇺🇸En")],
         ]
 
     return ReplyKeyboardMarkup(btn, resize_keyboard=True)
@@ -27,12 +29,12 @@ def admin_btn(type=None, lang=1):
     btn = []
     if type == "admin_menu":
         btn = [
-            [KeyboardButton(TEXTS["Reklama yuborish"][lang]), KeyboardButton(TEXTS["Users 👤"][lang])],
-            [KeyboardButton(TEXTS["Botga qaytish 🏘"][lang])]
+            [KeyboardButton("Reklama yuborish"), KeyboardButton("Users 👤")],
+            [KeyboardButton("Botga qaytish 🏘")]
         ]
     elif type == 'conf':
         btn = [
-            [KeyboardButton(TEXTS["Ha"][lang]), KeyboardButton(TEXTS["Yo'q"][lang])]
+            [KeyboardButton("Ha"), KeyboardButton("Yo'q")]
         ]
 
     return ReplyKeyboardMarkup(btn, resize_keyboard=True)

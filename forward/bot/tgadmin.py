@@ -1,3 +1,4 @@
+from bot.Globals import TEXTS
 from bot.buttons import admin_btn, btns
 from bot.models import Log, User
 
@@ -24,7 +25,7 @@ def TGAdmin(update, context):
         log['state'] = 1
         tg_user.menu = 0
         tg_user.save()
-        update.message.reply_text("Menuga xush kelibsiz 👇", reply_markup=btns("manu"))
+        update.message.reply_text(TEXTS['MENU1'][tg_user.lang], reply_markup=btns('menu', lang=tg_user.lang))
         tglog.messages = log
         tglog.save()
         return 0

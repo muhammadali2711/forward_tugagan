@@ -5,6 +5,7 @@ from bot.models import *
 from bot.tgadmin import TGAdmin
 from bot.Globals import TEXTS
 
+
 # Create your views here.
 
 
@@ -34,8 +35,7 @@ def start(update, context):
             update.message.reply_text(TEXTS['MENU1'][tg_user.lang], reply_markup=btns('menu', lang=tg_user.lang))
         else:
             log['state'] = 0
-            update.message.reply_html(TEXTS['START'],reply_markup=btns("lang"))
-
+            update.message.reply_html(TEXTS['START'], reply_markup=btns("lang"))
 
     tglog.messages = log
     tglog.save()
@@ -47,41 +47,8 @@ def message_handler(update: Update, context: CallbackContext):
     log = tglog.messages
     tg_user = User.objects.filter(user_id=user.id).first()
     msg = update.message.text
-    user = update.message.from_user
-    tg_user = User.objects.get(user_id=user.id)
-    tglog = Log.objects.filter(user_id=user.id).first()
-    msg = update.message.text
-    log = tglog.messages
     state = log.get('state', 0)
     print(log, state)
-    if state == 0:
-        log['state'] = 1
-        if msg == "🇺🇿Uz":
-            print("uz")
-            tg_user.lang = 1
-            tg_user.save()
-        elif msg == "🇷🇺Ru":
-            print("A")
-            tg_user.lang = 2
-            tg_user.save()
-        else:
-            update.message.reply_text(TEXTS['START'], reply_markup=btns("lang"))
-            return 0
-        update.message.reply_text(TEXTS['NAME'][tg_user.lang])
-        tglog.messages = log
-        tglog.save()
-        return 0
-    if log['state'] == 1:
-        if msg.isalpha():
-            log['name'] = msg
-            log['state'] = 2
-            update.message.reply_text(TEXTS["CONTACT"][tg_user.lang], reply_markup=btns('contact', lang=tg_user.lang))
-        else:
-            update.message.reply_text(TEXTS['ERROR1'][tg_user.lang])
-    elif log['state'] == 2:
-        update.message.reply_text(TEXTS['CONTACT2'][tg_user.lang])
-
-        print(msg)
 
     if tg_user.menu == 1:
         TGAdmin(update, context)
@@ -108,7 +75,38 @@ def message_handler(update: Update, context: CallbackContext):
         else:
             update.message.reply_text("Parolni notog'ri kiridingiz")
             return 0
+    if state == 0:
+        log['state'] = 1
+        if msg == "🇺🇿Uz":
+            print("uz")
+            tg_user.lang = 1
+            tg_user.save()
+        elif msg == "🇷🇺Ru":
+            print("A")
+            tg_user.lang = 2
+            tg_user.save()
+        elif msg == "🇺🇸En":
+            print("A")
+            tg_user.lang = 3
+            tg_user.save()
+        else:
+            update.message.reply_text(TEXTS['START'], reply_markup=btns("lang"))
+            return 0
+        update.message.reply_text(TEXTS['NAME'][tg_user.lang])
+        tglog.messages = log
+        tglog.save()
+        return 0
+    if log['state'] == 1:
+        if msg.isalpha():
+            log['name'] = msg
+            log['state'] = 2
+            update.message.reply_text(TEXTS["CONTACT"][tg_user.lang], reply_markup=btns('contact', lang=tg_user.lang))
+        else:
+            update.message.reply_text(TEXTS['ERROR1'][tg_user.lang])
+    elif log['state'] == 2:
+        update.message.reply_text(TEXTS['CONTACT2'][tg_user.lang])
 
+        print(msg)
 
     elif msg == TEXTS["Lokatsiya📍"][tg_user.lang]:
         log['state'] = 10
@@ -120,11 +118,41 @@ def message_handler(update: Update, context: CallbackContext):
 
     elif msg == TEXTS['forward_academy.uz'][tg_user.lang]:
         log['state'] = 10
-        update.message.reply_text("..")
+        update.message.reply_text("https://forwardacademy.uz/")
 
     elif msg == TEXTS['Telegram'][tg_user.lang]:
         log['state'] = 10
+        update.message.reply_text("https://t.me/forwardacademyuz")
+
+    elif msg == TEXTS['Telegram Support'][tg_user.lang]:
+        log['state'] = 10
         update.message.reply_text("https://t.me/ForwardAcademy_uz")
+    elif msg == TEXTS['Call center'][tg_user.lang]:
+        log['state'] = 10
+        update.message.reply_html("+998-55-508-84-84")
+
+    elif msg == TEXTS['Settings'][tg_user.lang]:
+        log['state'] = 40
+        log['til'] = msg
+        update.message.reply_text(TEXTS["LANG"][tg_user.lang], reply_markup=btns("lang", lang=tg_user.lang))
+    elif msg == "🇺🇿Uz":
+        log['state'] = 41
+        tg_user.lang = 1
+        tg_user.save()
+        update.message.reply_text(TEXTS['SET'][tg_user.lang])
+        update.message.reply_text(TEXTS['MENU1'][tg_user.lang], reply_markup=btns('menu', lang=tg_user.lang))
+    elif msg == "🇷🇺Ru":
+        log['state'] = 42
+        tg_user.lang = 2
+        tg_user.save()
+        update.message.reply_text(TEXTS['SET'][tg_user.lang])
+        update.message.reply_text(TEXTS['MENU1'][tg_user.lang], reply_markup=btns('menu', lang=tg_user.lang))
+    elif msg == "🇺🇸En":
+        log['state'] = 43
+        tg_user.lang = 3
+        tg_user.save()
+        update.message.reply_text(TEXTS['SET'][tg_user.lang])
+        update.message.reply_text(TEXTS['MENU1'][tg_user.lang], reply_markup=btns('menu', lang=tg_user.lang))
 
     tglog.messages = log
     tglog.save()
@@ -145,8 +173,8 @@ def contact_handler(update, context):
         log['state'] = 10
         tg_user.phone = log['contact']
         tg_user.save()
-        update.message.reply_text(TEXTS["Sizning ma`lumotlaringiz saqlandi siz bilan tez orada bog'lanamiz! 🥳"][tg_user.lang],
-                                  reply_markup=btns('menu', lang=tg_user.lang))
+        update.message.reply_text(TEXTS["save info"][tg_user.lang], reply_markup=btns('menu', lang=tg_user.lang))
 
     tglog.messages = log
     tglog.save()
+
